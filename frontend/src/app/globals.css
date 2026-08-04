@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --font-display: "Cormorant Garamond", serif;
+  --font-body: "DM Sans", sans-serif;
+  --canvas: #f8f3eb;
+  --panel: #fffaf3;
+  --soft: #eee4d8;
+  --ink: #21161a;
+  --subtle: #756970;
+  --line: rgba(61, 15, 33, .13);
+}
+
+.dark {
+  --canvas: #150e10;
+  --panel: #20171a;
+  --soft: #2a1e22;
+  --ink: #fbf8f3;
+  --subtle: #a79ba0;
+  --line: rgba(255,255,255,.09);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--canvas);
+  color: var(--ink);
+  transition: background-color .35s ease, color .35s ease;
+}
+
+@layer utilities {
+  .bg-canvas { background-color: var(--canvas); }
+  .bg-panel { background-color: var(--panel); }
+  .bg-soft { background-color: var(--soft); }
+  .text-ink { color: var(--ink); }
+  .text-subtle { color: var(--subtle); }
+  .border-line { border-color: var(--line); }
+  .shadow-luxury { box-shadow: 0 24px 70px -35px rgba(30, 5, 15, .55); }
+}
+
+@layer components {
+  .button-primary { @apply items-center justify-center rounded-full bg-burgundy px-6 py-3 text-sm font-medium text-cream transition hover:-translate-y-0.5 hover:bg-wine focus:outline-none focus:ring-2 focus:ring-gold focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50; }
+  .button-secondary { @apply inline-flex items-center justify-center rounded-full border border-line bg-panel px-6 py-3 text-sm text-ink transition hover:-translate-y-0.5 hover:border-gold/50 focus:outline-none focus:ring-2 focus:ring-gold; }
+  .nav-pill { @apply flex items-center gap-2 rounded-full px-4 py-2 text-xs text-subtle transition hover:bg-soft hover:text-ink; }
+  .nav-pill-active { @apply bg-soft text-ink; }
+  .icon-button { @apply grid h-10 w-10 place-items-center rounded-full border border-line text-subtle transition hover:border-gold/50 hover:text-gold focus:outline-none focus:ring-2 focus:ring-gold; }
+  .mobile-nav { @apply flex min-w-14 flex-col items-center gap-1 rounded-xl p-2 text-[9px]; }
+  .eyebrow { @apply text-[10px] font-medium uppercase tracking-[.26em] text-gold; }
+  .field { @apply w-full rounded-2xl border border-line bg-canvas px-4 py-3 text-sm text-ink outline-none transition placeholder:text-subtle focus:border-gold/60 focus:ring-2 focus:ring-gold/20; }
+}
+
+.luxury-loader { width: 34px; height: 34px; margin: 45vh auto; border: 1px solid var(--line); border-top-color: #c9a257; border-radius: 999px; animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+::selection {
+  background: #c9a257;
+  color: #1c1518;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
