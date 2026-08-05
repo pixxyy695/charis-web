@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   motion,
   useReducedMotion,
@@ -40,7 +41,6 @@ function GoldFlourish() {
   );
 }
 
-// Small fleur used at each frame corner — echoes the flourish divider.
 function CornerFleur({ className = "" }: { className?: string }) {
   return (
     <svg width="18" height="18" viewBox="0 0 18 18" fill="none" className={className} aria-hidden>
@@ -51,10 +51,15 @@ function CornerFleur({ className = "" }: { className?: string }) {
 }
 
 /**
- * A generated "old master" still life — a wrapped gift under a single
- * raking light, painted with layered gradients + turbulence texture
- * rather than a licensed artwork. Framed in gilt, on a brass plaque.
+ * Frames a real photo and grades it toward an "old master" feel with
+ * CSS alone: desaturate + sepia + contrast, canvas grain overlay, and a
+ * vignette. Swap PAINTING_SRC for your own licensed image — an Unsplash
+ * still life, florals, or a museum-style product shot all work well.
+ * Search ideas on unsplash.com: "dark moody still life", "vintage
+ * flowers oil", "antique objects dark background".
  */
+const PAINTING_SRC = "/images/gift.png"; // 
+
 function PaintingPanel() {
   const reduce = useReducedMotion();
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -63,8 +68,6 @@ function PaintingPanel() {
   const my = useMotionValue(0);
   const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), { stiffness: 150, damping: 20 });
   const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-6, 6]), { stiffness: 150, damping: 20 });
-  const glowX = useTransform(mx, [-0.5, 0.5], ["30%", "70%"]);
-  const glowY = useTransform(my, [-0.5, 0.5], ["30%", "70%"]);
 
   function handleMouseMove(e: React.MouseEvent<HTMLDivElement>) {
     if (reduce || !wrapRef.current) return;
@@ -117,77 +120,45 @@ function PaintingPanel() {
             {/* Inner bevel */}
             <div className="rounded-[1px] border border-black/40 p-[2px]">
               <div className="relative aspect-[4/5] overflow-hidden rounded-[1px] bg-[#0F0B0C]">
-                <svg viewBox="0 0 400 500" className="h-full w-full" preserveAspectRatio="xMidYMid slice">
-                  <defs>
-                    <radialGradient id="light" cx="30%" cy="18%" r="75%">
-                      <stop offset="0%" stopColor="#E8CE9A" stopOpacity="0.55" />
-                      <stop offset="45%" stopColor="#8B6F3F" stopOpacity="0.12" />
-                      <stop offset="100%" stopColor="#000000" stopOpacity="0" />
-                    </radialGradient>
-                    <linearGradient id="cloth" x1="0" y1="0" x2="1" y2="1">
-                      <stop offset="0%" stopColor="#241A1C" />
-                      <stop offset="55%" stopColor="#140E10" />
-                      <stop offset="100%" stopColor="#0A0708" />
-                    </linearGradient>
-                    <linearGradient id="box" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#B98A3F" />
-                      <stop offset="100%" stopColor="#5E4322" />
-                    </linearGradient>
-                    <linearGradient id="ribbon" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%" stopColor="#E4C888" />
-                      <stop offset="100%" stopColor="#9C7A3E" />
-                    </linearGradient>
-                    <filter id="canvasWeave">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="n" />
-                      <feColorMatrix in="n" type="saturate" values="0" />
-                    </filter>
-                    <filter id="brush">
-                      <feTurbulence type="fractalNoise" baseFrequency="0.012 0.06" numOctaves="2" seed="3" result="w" />
-                      <feDisplacementMap in="SourceGraphic" in2="w" scale="14" />
-                    </filter>
-                  </defs>
+                {/* The photo, graded toward an old-master palette */}
+                <Image
+                  src={PAINTING_SRC}
+                  alt="Still life arrangement, styled after old master paintings"
+                  fill
+                  sizes="(max-width: 768px) 90vw, 360px"
+                  className="object-cover"
+                  style={{
+                    filter: "sepia(0.35) saturate(1.15) contrast(1.1) brightness(0.85)",
+                  }}
+                />
 
-                  {/* Background drape */}
-                  <rect width="400" height="500" fill="url(#cloth)" filter="url(#brush)" />
+                {/* Warm chiaroscuro spotlight, upper-left */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at 28% 18%, rgba(232,206,154,0.35), transparent 55%)",
+                    mixBlendMode: "overlay",
+                  }}
+                />
 
-                  {/* Table line */}
-                  <rect x="0" y="370" width="400" height="130" fill="#0A0706" opacity="0.9" filter="url(#brush)" />
+                {/* Canvas grain */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-overlay"
+                  style={{ backgroundImage: `url("${GRAIN_URL}")` }}
+                />
 
-                  {/* Gift box, lit from upper-left like a Dutch still life */}
-                  <g filter="url(#brush)">
-                    <rect x="130" y="230" width="150" height="140" fill="url(#box)" />
-                    <rect x="130" y="230" width="150" height="140" fill="url(#light)" />
-                    {/* ribbon */}
-                    <rect x="192" y="230" width="26" height="140" fill="url(#ribbon)" opacity="0.9" />
-                    <rect x="130" y="292" width="150" height="26" fill="url(#ribbon)" opacity="0.9" />
-                    {/* bow */}
-                    <path
-                      d="M205 230 C 180 205, 150 205, 155 232 C 158 244, 190 240, 205 230 Z"
-                      fill="url(#ribbon)"
-                    />
-                    <path
-                      d="M205 230 C 230 205, 260 205, 255 232 C 252 244, 220 240, 205 230 Z"
-                      fill="url(#ribbon)"
-                    />
-                  </g>
-
-                  {/* Chiaroscuro spotlight over everything */}
-                  <rect width="400" height="500" fill="url(#light)" />
-
-                  {/* Canvas weave */}
-                  <rect width="400" height="500" filter="url(#canvasWeave)" opacity="0.05" style={{ mixBlendMode: "overlay" }} />
-
-                  {/* Vignette */}
-                  <rect
-                    width="400"
-                    height="500"
-                    fill="url(#vignette)"
-                  />
-                  <radialGradient id="vignette" cx="50%" cy="45%" r="75%">
-                    <stop offset="55%" stopColor="black" stopOpacity="0" />
-                    <stop offset="100%" stopColor="black" stopOpacity="0.55" />
-                  </radialGradient>
-                </svg>
+                {/* Vignette */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "radial-gradient(ellipse at 50% 45%, transparent 50%, rgba(0,0,0,0.55) 100%)",
+                  }}
+                />
 
                 {/* Slow ambient varnish sheen */}
                 {!reduce && (
@@ -196,7 +167,7 @@ function PaintingPanel() {
                     className="pointer-events-none absolute inset-0"
                     style={{
                       background:
-                        "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.06) 50%, transparent 60%)",
+                        "linear-gradient(115deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%)",
                     }}
                     animate={{ backgroundPositionX: ["-40%", "140%"] }}
                     transition={{ duration: 7, repeat: Infinity, ease: "linear" }}
@@ -259,7 +230,6 @@ export function FinalCTA() {
         ))}
 
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-10">
-        {/* Text side */}
         <div className="text-center lg:col-span-7 lg:text-left">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
@@ -305,7 +275,6 @@ export function FinalCTA() {
           </motion.div>
         </div>
 
-        {/* Painting side */}
         <div className="lg:col-span-5">
           <PaintingPanel />
         </div>
