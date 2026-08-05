@@ -53,12 +53,9 @@ function CornerFleur({ className = "" }: { className?: string }) {
 /**
  * Frames a real photo and grades it toward an "old master" feel with
  * CSS alone: desaturate + sepia + contrast, canvas grain overlay, and a
- * vignette. Swap PAINTING_SRC for your own licensed image — an Unsplash
- * still life, florals, or a museum-style product shot all work well.
- * Search ideas on unsplash.com: "dark moody still life", "vintage
- * flowers oil", "antique objects dark background".
+ * vignette. Swap PAINTING_SRC for your own licensed image.
  */
-const PAINTING_SRC = "/images/gift.png"; // 
+const PAINTING_SRC = "/images/gift.png";
 
 function PaintingPanel() {
   const reduce = useReducedMotion();
@@ -90,7 +87,7 @@ function PaintingPanel() {
       viewport={{ once: true }}
       transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
       style={{ perspective: 1000 }}
-      className="relative mx-auto w-full max-w-[360px]"
+      className="relative mx-auto w-full max-w-[460px]"
     >
       {/* Ambient wall glow, like a gallery spotlight */}
       <motion.div
@@ -107,7 +104,7 @@ function PaintingPanel() {
         <div className="relative rounded-[2px] border border-gold/25 p-[3px] shadow-[0_25px_60px_-15px_rgba(0,0,0,0.6)]">
           {/* Gilt molding */}
           <div
-            className="relative rounded-[1px] p-3"
+            className="relative rounded-[1px] p-2"
             style={{
               background: "linear-gradient(135deg,#8B6F3F 0%,#E4C888 25%,#8B6F3F 50%,#E4C888 75%,#8B6F3F 100%)",
             }}
@@ -118,14 +115,14 @@ function PaintingPanel() {
             <CornerFleur className="absolute -bottom-1 -right-1" />
 
             {/* Inner bevel */}
-            <div className="rounded-[1px] border border-black/40 p-[2px]">
-              <div className="relative aspect-[4/5] overflow-hidden rounded-[1px] bg-[#0F0B0C]">
+            <div className="rounded-[1px] border border-black/40 p-px">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-[1px] bg-[#0F0B0C]">
                 {/* The photo, graded toward an old-master palette */}
                 <Image
                   src={PAINTING_SRC}
                   alt="Still life arrangement, styled after old master paintings"
                   fill
-                  sizes="(max-width: 768px) 90vw, 360px"
+                  sizes="(max-width: 768px) 92vw, 460px"
                   className="object-cover"
                   style={{
                     filter: "sepia(0.35) saturate(1.15) contrast(1.1) brightness(0.85)",
@@ -230,6 +227,7 @@ export function FinalCTA() {
         ))}
 
       <div className="relative mx-auto grid max-w-6xl grid-cols-1 items-center gap-16 lg:grid-cols-12 lg:gap-10">
+        {/* Text side */}
         <div className="text-center lg:col-span-7 lg:text-left">
           <motion.p
             initial={{ opacity: 0, y: 8 }}
@@ -275,6 +273,7 @@ export function FinalCTA() {
           </motion.div>
         </div>
 
+        {/* Painting side */}
         <div className="lg:col-span-5">
           <PaintingPanel />
         </div>
