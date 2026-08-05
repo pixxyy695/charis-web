@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import { SectionHead } from "./SectionHead";
 
@@ -18,23 +19,6 @@ const faqs = [
     a: "Yes. Every recommendation can be saved to your dashboard and revisited any time.",
   },
 ];
-
-function PlusMinus({ open }: { open: boolean }) {
-  return (
-    <span className="relative flex h-4 w-4 items-center justify-center">
-      <motion.span
-        className="absolute h-px w-3.5 bg-gold"
-        animate={{ rotate: open ? 90 : 0, opacity: open ? 0 : 1 }}
-        transition={{ duration: 0.3, ease: "easeInOut" }}
-      />
-      <motion.span
-        className="absolute h-px w-3.5 bg-gold"
-        animate={{ rotate: 0 }}
-        transition={{ duration: 0.3 }}
-      />
-    </span>
-  );
-}
 
 function FAQRow({
   item,
@@ -131,9 +115,12 @@ export function FAQ() {
         className="mx-auto mt-10 max-w-[760px] text-[13.5px] text-muted"
       >
         Still have a question?{" "}
-        <a href="/#contact" className="text-gold-soft underline-offset-4 transition-colors hover:text-gold hover:underline">
+        <Link
+          href="/#contact"
+          className="text-gold-soft underline-offset-4 transition-colors hover:text-gold hover:underline"
+        >
           Get in touch
-        </a>
+        </Link>
         .
       </motion.p>
     </section>
